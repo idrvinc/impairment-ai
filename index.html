@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ImpairmentAI - Real-Time Impairment Detection | idrv Solutions</title>
+  <!-- Add modern icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Add modern font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/images/bg.jpg">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #0f172a;
+      --accent: #22c55e;
+      --background: #f8fafc;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --white: #ffffff;
+      --gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      background-color: var(--background);
+    }
+
+    /* Modern Header with Video Background */
+    .hero {
+      position: relative;
+      height: 100vh;
+      background: var(--secondary);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: var(--white);
+      max-width: 800px;
+      padding: 0 20px;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      animation: fadeInUp 1s ease 0.2s;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+
+    /* Modern Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+      background: transparent;
+      transition: background 0.3s ease;
+      z-index: 1000;
+    }
+
+    .navbar.scrolled {
+      background: var(--secondary);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    /* Modern Buttons */
+    .button {
+      display: inline-block;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: var(--gradient);
+      color: var(--white);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+    }
+
+    .button-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+    }
+
+    .button-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid var(--white);
+      margin-left: 1rem;
+    }
+
+    .button-secondary:hover {
+      background: var(--white);
+      color: var(--primary);
+    }
+
+    /* Feature Cards */
+    .features {
+      padding: 6rem 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    /* Statistics Section */
+    .stats {
+      background: var(--gradient);
+      padding: 4rem 2rem;
+      color: var(--white);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .stat-item h3 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Pricing Section Styles */
+    .pricing {
+      padding: 6rem 2rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+
+    .pricing-header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 4rem;
+    }
+
+    .pricing-header h2 {
+      font-size: 2.5rem;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .pricing-header p {
+      color: var(--text-light);
+      font-size: 1.2rem;
+    }
+
+    .pricing-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 3rem;
+      gap: 1rem;
+    }
+
+    .toggle-button {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-button.active {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .price-card {
+      background: var(--white);
+      padding: 3rem 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .price-card.featured::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: 1.5rem;
+      right: -4rem;
+      background: var(--accent);
+      color: var(--white);
+      padding: 0.5rem 4rem;
+      transform: rotate(45deg);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .price-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .price-card h3 {
+      font-size: 1.8rem;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .price {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 1.5rem 0;
+    }
+
+    .price span {
+      font-size: 1.2rem;
+      color: var(--text-light);
+    }
+
+    .price-features {
+      list-style: none;
+      padding: 0;
+      margin: 2rem 0;
+    }
+
+    .price-features li {
+      padding-left: 2rem;
+      position: relative;
+      margin-bottom: 1rem;
+      color: var(--text-light);
+    }
+
+    .price-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .price-features li.not-included {
+      color: #94a3b8;
+    }
+
+    .price-features li.not-included::before {
+      content: '×';
+      color: #94a3b8;
+    }
+
+    /* About ImpairmentAI Section */
+    .about-ai {
+      padding: 6rem 2rem;
+      background: var(--white);
+    }
+
+    .about-header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 4rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .about-content {
+      padding-right: 2rem;
+    }
+
+    .about-image {
+      position: relative;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .key-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .key-point {
+      background: #f8fafc;
+      padding: 2rem;
+      border-radius: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .key-point:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .key-point-icon {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--secondary);
+      color: var(--white);
+      padding: 4rem 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .price-card.featured {
+        transform: none;
+      }
+    }
+
+    /* How It Works Section Styles */
+    .how-it-works {
+      padding: 6rem 2rem;
+      background: var(--background);
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 4rem;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .section-header p {
+      color: var(--text-light);
+      font-size: 1.2rem;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 4px;
+      height: 100%;
+      background: var(--primary);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      display: flex;
+      justify-content: flex-end;
+      padding: 40px 0;
+      width: 100%;
+      margin: -5px 0;
+    }
+
+    .timeline-item:nth-child(odd) {
+      justify-content: flex-start;
+    }
+
+    .timeline-content {
+      width: 45%;
+      padding: 2rem;
+      background: var(--white);
+      border-radius: 1rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .timeline-content:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .timeline-content::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 20px;
+      height: 20px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content::before {
+      right: -60px;
+      transform: translateY(-50%);
+    }
+
+    .timeline-item:nth-child(even) .timeline-content::before {
+      left: -60px;
+      transform: translateY(-50%);
+    }
+
+    .timeline-icon {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .timeline-content h3 {
+      color: var(--secondary);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .timeline-content p {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .detail-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .detail-list li {
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+      color: var(--text-light);
+    }
+
+    .detail-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+    }
+
+    .tech-stack {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .tech-badge {
+      padding: 0.5rem 1rem;
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--primary);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* Integration Methods Section */
+    .integration-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 4rem;
+    }
+
+    .integration-card {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .integration-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .code-preview {
+      background: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    .code-preview code {
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .timeline::before {
+        left: 30px;
+      }
+
+      .timeline-item {
+        justify-content: flex-start;
+        padding-left: 80px;
+      }
+
+      .timeline-item:nth-child(odd) {
+        justify-content: flex-start;
+      }
+
+      .timeline-content {
+        width: 100%;
+      }
+
+      .timeline-item:nth-child(odd) .timeline-content::before,
+      .timeline-item:nth-child(even) .timeline-content::before {
+        left: -50px;
+      }
+    }
+
+    /* FAQ Section Styles */
+    .faq {
+      padding: 6rem 2rem;
+      background: var(--background);
+    }
+
+    .faq-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      background: var(--white);
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--secondary);
+      transition: all 0.3s ease;
+    }
+
+    .faq-question:hover {
+      background: rgba(37, 99, 235, 0.05);
+    }
+
+    .faq-answer {
+      padding: 0 1.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      color: var(--text-light);
+    }
+
+    .faq-item.active .faq-answer {
+      padding: 0 1.5rem 1.5rem;
+      max-height: 500px;
+    }
+
+    .faq-item.active .faq-question i {
+      transform: rotate(180deg);
+    }
+
+    /* Contact Section Styles */
+    .contact {
+      padding: 6rem 2rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+    }
+
+    .contact-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 4rem;
+    }
+
+    .contact-info {
+      padding-right: 2rem;
+    }
+
+    .contact-info h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-details {
+      margin-top: 2rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-item i {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+
+    .contact-form {
+      background: var(--white);
+      padding: 3rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--secondary);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Social Media Links */
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .social-link {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      background: var(--white);
+      color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    /* Navigation Styles */
+    .main-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: transparent;
+      padding: 1.5rem 2rem;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .main-nav.scrolled {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .nav-logo img {
+      height: 40px;
+      margin-right: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      background: var(--accent);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+    }
+
+    /* Mobile Navigation */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background: var(--secondary);
+        padding: 2rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    /* Use Cases Section Styles */
+    .use-cases {
+      padding: 6rem 2rem;
+      background: var(--background);
+      position: relative;
+    }
+
+    /* Add this for a smooth transition between sections */
+    .use-cases::before {
+      content: '';
+      position: absolute;
+      top: -5rem;
+      left: 0;
+      right: 0;
+      height: 5rem;
+      background: linear-gradient(to bottom, transparent, var(--background));
+      pointer-events: none;
+    }
+
+    /* Update the section header margins */
+    .use-cases .section-header {
+      margin-bottom: 4rem;
+    }
+
+    /* Add some spacing between cards and stats */
+    .industry-stats {
+      margin-top: 6rem;
+    }
+
+    /* Add responsive adjustments */
+    @media (max-width: 768px) {
+      .use-cases {
+        padding: 4rem 1rem;
+      }
+
+      .use-cases-grid {
+        gap: 1.5rem;
+      }
+
+      .industry-stats {
+        margin-top: 4rem;
+      }
+    }
+
+    .use-cases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .industry-card {
+      background: var(--white);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: relative;
+      height: 400px;
+    }
+
+    .industry-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .industry-image {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .industry-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .industry-card:hover .industry-image img {
+      transform: scale(1.1);
+    }
+
+    .industry-content {
+      padding: 2rem;
+    }
+
+    .industry-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--primary);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      position: absolute;
+      top: 170px;
+      right: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .industry-title {
+      font-size: 1.5rem;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .benefit-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .benefit-list li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      color: var(--text-light);
+    }
+
+    .benefit-list li i {
+      color: var(--accent);
+      margin-right: 0.5rem;
+    }
+
+    /* Stats Counter */
+    .industry-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 4rem auto 0;
+      text-align: center;
+    }
+
+    .stat-box {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-light);
+      font-size: 1.1rem;
+    }
+
+    /* Case Study Slider */
+    .case-studies {
+      margin-top: 4rem;
+      position: relative;
+      padding: 0 1rem;
+    }
+
+    .case-study-card {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 1rem;
+      margin: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .client-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .client-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-right: 1rem;
+    }
+
+    .client-details h4 {
+      margin: 0;
+      color: var(--secondary);
+    }
+
+    .client-details p {
+      margin: 0;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <!-- Replace with your logo -->
+        <img src="assets/images/logo.png" alt="ImpairmentAI Logo">
+        ImpairmentAI
+      </a>
+
+      <button class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <div class="nav-links">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#use-cases" class="nav-link">Use Cases</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="#contact" class="nav-link nav-cta">Contact Us</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Drive Smarter. Drive Safer.</h1>
+      <p>Introducing <strong>ImpairmentAI</strong> — The Future of Road Safety</p>
+      <div class="hero-buttons">
+        <a href="#demo" class="button button-primary">Request Demo</a>
+        <a href="#brochure" class="button button-secondary">Download Brochure</a>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-mobile-alt feature-icon"></i>
+        <h3>Smartphone-Only</h3>
+        <p>No additional hardware required. Uses existing smartphone sensors.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-bolt feature-icon"></i>
+        <h3>Real-Time Detection</h3>
+        <p>Instant risk scoring and alerts based on AI analysis.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-shield-alt feature-icon"></i>
+        <h3>Privacy-First</h3>
+        <p>GDPR compliant with end-to-end encryption.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About ImpairmentAI Section -->
+  <section class="about-ai" id="about">
+    <div class="about-header">
+      <h2>What is ImpairmentAI?</h2>
+      <p>Revolutionary technology that transforms smartphones into powerful impairment detection systems</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-content">
+        <h3>Transforming Road Safety with AI</h3>
+        <p>ImpairmentAI is a cutting-edge artificial intelligence system that uses smartphone sensors to detect potential driver impairment before it leads to accidents. Our technology processes multiple data points in real-time to identify signs of fatigue, intoxication, or other forms of impairment.</p>
+        
+        <div class="key-points">
+          <div class="key-point">
+            <i class="fas fa-microchip key-point-icon"></i>
+            <h4>Advanced AI Technology</h4>
+            <p>Powered by state-of-the-art machine learning algorithms trained on millions of data points</p>
+          </div>
+          <div class="key-point">
+            <i class="fas fa-shield-alt key-point-icon"></i>
+            <h4>Privacy-Focused</h4>
+            <p>All processing happens on-device with anonymized data collection</p>
+          </div>
+          <div class="key-point">
+            <i class="fas fa-tachometer-alt key-point-icon"></i>
+            <h4>Real-Time Detection</h4>
+            <p>Instant analysis and alerts for proactive safety measures</p>
+          </div>
+          <div class="key-point">
+            <i class="fas fa-chart-bar key-point-icon"></i>
+            <h4>99.9% Accuracy</h4>
+            <p>Highly accurate detection with minimal false positives</p>
+          </div>
+        </div>
+      </div>
+      <div class="about-image">
+        <img src="https://placehold.co/600x400" alt="ImpairmentAI Technology Visualization">
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases Section -->
+  <section class="use-cases" id="use-cases">
+    <div class="section-header">
+      <h2>Industry Solutions</h2>
+      <p>Discover how ImpairmentAI transforms safety across different mobility sectors</p>
+    </div>
+
+    <div class="use-cases-grid">
+      <!-- Ride-Hailing & Delivery -->
+      <div class="industry-card">
+        <div class="industry-image">
+          <img src="https://source.unsplash.com/random/800x600/?rideshare" alt="Ride-hailing">
+          <div class="industry-icon">
+            <i class="fas fa-car"></i>
+          </div>
+        </div>
+        <div class="industry-content">
+          <h3 class="industry-title">Ride-Hailing & Delivery</h3>
+          <ul class="benefit-list">
+            <li><i class="fas fa-check-circle"></i> Real-time driver monitoring</li>
+            <li><i class="fas fa-check-circle"></i> Passenger safety assurance</li>
+            <li><i class="fas fa-check-circle"></i> Automated risk prevention</li>
+            <li><i class="fas fa-check-circle"></i> Brand trust enhancement</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Fleet Management -->
+      <div class="industry-card">
+        <div class="industry-image">
+          <img src="https://source.unsplash.com/random/800x600/?truck-fleet" alt="Fleet Management">
+          <div class="industry-icon">
+            <i class="fas fa-truck"></i>
+          </div>
+        </div>
+        <div class="industry-content">
+          <h3 class="industry-title">Fleet Management</h3>
+          <ul class="benefit-list">
+            <li><i class="fas fa-check-circle"></i> Comprehensive fleet monitoring</li>
+            <li><i class="fas fa-check-circle"></i> Reduced accident rates</li>
+            <li><i class="fas fa-check-circle"></i> Insurance cost optimization</li>
+            <li><i class="fas fa-check-circle"></i> Compliance management</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Last-Mile Delivery -->
+      <div class="industry-card">
+        <div class="industry-image">
+          <img src="https://source.unsplash.com/random/800x600/?delivery" alt="Last-Mile Delivery">
+          <div class="industry-icon">
+            <i class="fas fa-box"></i>
+          </div>
+        </div>
+        <div class="industry-content">
+          <h3 class="industry-title">Last-Mile Delivery</h3>
+          <ul class="benefit-list">
+            <li><i class="fas fa-check-circle"></i> Driver fatigue prevention</li>
+            <li><i class="fas fa-check-circle"></i> Route optimization</li>
+            <li><i class="fas fa-check-circle"></i> Delivery safety tracking</li>
+            <li><i class="fas fa-check-circle"></i> Performance monitoring</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Corporate Mobility -->
+      <div class="industry-card">
+        <div class="industry-image">
+          <img src="https://source.unsplash.com/random/800x600/?corporate-car" alt="Corporate Mobility">
+          <div class="industry-icon">
+            <i class="fas fa-building"></i>
+          </div>
+        </div>
+        <div class="industry-content">
+          <h3 class="industry-title">Corporate Mobility</h3>
+          <ul class="benefit-list">
+            <li><i class="fas fa-check-circle"></i> Employee safety management</li>
+            <li><i class="fas fa-check-circle"></i> Risk mitigation</li>
+            <li><i class="fas fa-check-circle"></i> Duty of care compliance</li>
+            <li><i class="fas fa-check-circle"></i> Travel policy enforcement</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Industry Statistics -->
+    <div class="industry-stats">
+      <div class="stat-box">
+        <div class="stat-number">45%</div>
+        <div class="stat-label">Accident Reduction</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">30%</div>
+        <div class="stat-label">Insurance Savings</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">Real-time Monitoring</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">15min</div>
+        <div class="stat-label">Average Integration Time</div>
+      </div>
+    </div>
+
+    <!-- Case Studies -->
+    <div class="case-studies">
+      <div class="section-header" style="margin-top: 4rem;">
+        <h3>Success Stories</h3>
+        <p>See how leading companies are using ImpairmentAI</p>
+      </div>
+
+      <div class="case-study-card">
+        <div class="client-info">
+          <img src="path/to/client-logo.png" alt="Client Logo" class="client-logo">
+          <div class="client-details">
+            <h4>Major Ride-Hailing Company</h4>
+            <p>50,000+ Drivers Protected</p>
+          </div>
+        </div>
+        <p>"Implementation of ImpairmentAI led to a 45% reduction in safety incidents and significantly improved our safety ratings."</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-mobile-alt feature-icon"></i>
+        <h3>Smartphone-Only</h3>
+        <p>No additional hardware required. Uses existing smartphone sensors.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-bolt feature-icon"></i>
+        <h3>Real-Time Detection</h3>
+        <p>Instant risk scoring and alerts based on AI analysis.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-shield-alt feature-icon"></i>
+        <h3>Privacy-First</h3>
+        <p>GDPR compliant with end-to-end encryption.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="section-header">
+      <h2>How ImpairmentAI Works</h2>
+      <p>Our advanced AI-powered system detects impairment through a sophisticated multi-step process, ensuring accuracy and reliability.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <i class="fas fa-plug timeline-icon"></i>
+          <h3>1. Integration Setup</h3>
+          <p>Quick and seamless integration into your existing systems through our SDK or API.</p>
+          <ul class="detail-list">
+            <li>Choose between native SDK or REST API</li>
+            <li>Access comprehensive documentation</li>
+            <li>Get developer support during setup</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech-badge">iOS SDK</span>
+            <span class="tech-badge">Android SDK</span>
+            <span class="tech-badge">REST API</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <i class="fas fa-mobile-alt timeline-icon"></i>
+          <h3>2. Data Collection</h3>
+          <p>Passive collection of smartphone sensor data to detect impairment indicators.</p>
+          <ul class="detail-list">
+            <li>Motion sensors (accelerometer, gyroscope)</li>
+            <li>Touch pattern analysis</li>
+            <li>Device interaction metrics</li>
+            <li>Behavioral biometrics</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech-badge">Motion Analysis</span>
+            <span class="tech-badge">Pattern Recognition</span>
+            <span class="tech-badge">Behavioral Analysis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <i class="fas fa-brain timeline-icon"></i>
+          <h3>3. AI Processing</h3>
+          <p>Advanced machine learning algorithms analyze collected data in real-time.</p>
+          <ul class="detail-list">
+            <li>Neural network processing</li>
+            <li>Pattern matching against baseline</li>
+            <li>Anomaly detection</li>
+            <li>Continuous learning system</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech-badge">Machine Learning</span>
+            <span class="tech-badge">Neural Networks</span>
+            <span class="tech-badge">Real-time Analysis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <i class="fas fa-chart-line timeline-icon"></i>
+          <h3>4. Risk Assessment</h3>
+          <p>Comprehensive risk scoring and immediate alert generation.</p>
+          <ul class="detail-list">
+            <li>Real-time risk scoring (0-100)</li>
+            <li>Multiple risk factor analysis</li>
+            <li>Historical pattern comparison</li>
+            <li>Confidence level calculation</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech-badge">Risk Scoring</span>
+            <span class="tech-badge">Alert System</span>
+            <span class="tech-badge">Pattern Analysis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <i class="fas fa-bell timeline-icon"></i>
+          <h3>5. Alert & Response</h3>
+          <p>Immediate notification and response system activation.</p>
+          <ul class="detail-list">
+            <li>Custom alert thresholds</li>
+            <li>Multiple notification channels</li>
+            <li>Automated response triggers</li>
+            <li>Emergency contact integration</li>
+          </ul>
+          <div class="tech-stack">
+            <span class="tech-badge">Push Notifications</span>
+            <span class="tech-badge">SMS Alerts</span>
+            <span class="tech-badge">Email Reports</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 4rem;">
+      <h2>Integration Methods</h2>
+      <p>Choose the integration method that best suits your needs</p>
+    </div>
+
+    <div class="integration-methods">
+      <div class="integration-card">
+        <h3><i class="fas fa-code"></i> REST API</h3>
+        <p>Simple HTTP endpoints for quick integration</p>
+        <div class="code-preview">
+          <code>
+POST /api/v1/analyze<br>
+{<br>
+  "user_id": "12345",<br>
+  "sensor_data": {<br>
+    "motion": [...],<br>
+    "touch": [...],<br>
+    "behavior": [...]<br>
+  }<br>
+}
+          </code>
+        </div>
+        <ul class="detail-list">
+          <li>RESTful endpoints</li>
+          <li>JSON payload format</li>
+          <li>Secure authentication</li>
+        </ul>
+      </div>
+
+      <div class="integration-card">
+        <h3><i class="fab fa-android"></i> Native SDK</h3>
+        <p>Drop-in solution for mobile apps</p>
+        <div class="code-preview">
+          <code>
+// Initialize SDK<br>
+ImpairmentAI.initialize(apiKey);<br><br>
+// Start monitoring<br>
+ImpairmentAI.startMonitoring();<br><br>
+// Register callback<br>
+ImpairmentAI.setAlertListener(alert -> {<br>
+  // Handle alert<br>
+});
+          </code>
+        </div>
+        <ul class="detail-list">
+          <li>Native performance</li>
+          <li>Background processing</li>
+          <li>Automatic updates</li>
+        </ul>
+      </div>
+
+      <div class="integration-card">
+        <h3><i class="fas fa-cloud"></i> Cloud Integration</h3>
+        <p>Enterprise-grade cloud solution</p>
+        <div class="code-preview">
+          <code>
+// WebSocket connection<br>
+ws://api.impairmentai.com/v1/stream<br><br>
+// Real-time data streaming<br>
+{<br>
+  "type": "sensor_data",<br>
+  "data": { ... }<br>
+}
+          </code>
+        </div>
+        <ul class="detail-list">
+          <li>Real-time streaming</li>
+          <li>Load balancing</li>
+          <li>Data redundancy</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="stats">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <h3>30%</h3>
+        <p>Reduction in Incidents</p>
+      </div>
+      <div class="stat-item">
+        <h3>10x</h3>
+        <p>Faster Deployment</p>
+      </div>
+      <div class="stat-item">
+        <h3>24/7</h3>
+        <p>Real-time Monitoring</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing" id="pricing">
+    <div class="pricing-header">
+      <h2>Simple, Transparent Pricing</h2>
+      <p>Choose the plan that best fits your needs</p>
+    </div>
+
+    <div class="pricing-toggle">
+      <button class="toggle-button active">Monthly</button>
+      <button class="toggle-button">Annual</button>
+    </div>
+
+    <div class="pricing-cards">
+      <div class="price-card">
+        <h3>Starter</h3>
+        <p>Perfect for small businesses</p>
+        <div class="price">
+          $99 <span>/month</span>
+        </div>
+        <ul class="price-features">
+          <li>Up to 100 tests/month</li>
+          <li>Basic API access</li>
+          <li>Email support</li>
+          <li>Basic analytics dashboard</li>
+          <li class="not-included">Custom integration</li>
+          <li class="not-included">24/7 phone support</li>
+        </ul>
+        <a href="#contact" class="button button-primary">Get Started</a>
+      </div>
+
+      <div class="price-card featured">
+        <h3>Professional</h3>
+        <p>Ideal for growing fleets</p>
+        <div class="price">
+          $299 <span>/month</span>
+        </div>
+        <ul class="price-features">
+          <li>Up to 1,000 tests/month</li>
+          <li>Full API & SDK access</li>
+          <li>Priority email support</li>
+          <li>Advanced analytics</li>
+          <li>Basic custom integration</li>
+          <li class="not-included">24/7 phone support</li>
+        </ul>
+        <a href="#contact" class="button button-primary">Get Started</a>
+      </div>
+
+      <div class="price-card">
+        <h3>Enterprise</h3>
+        <p>For large organizations</p>
+        <div class="price">
+          Custom <span>pricing</span>
+        </div>
+        <ul class="price-features">
+          <li>Unlimited tests</li>
+          <li>Full API & SDK access</li>
+          <li>24/7 phone support</li>
+          <li>Custom analytics</li>
+          <li>Custom integration</li>
+          <li>Dedicated account manager</li>
+        </ul>
+        <a href="#contact" class="button button-primary">Contact Sales</a>
+      </div>
+    </div>
+
+    <script>
+      // Add this JavaScript for the pricing toggle functionality
+      const toggleButtons = document.querySelectorAll('.toggle-button');
+      toggleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          toggleButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+        });
+      });
+    </script>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq" id="faq">
+    <div class="section-header">
+      <h2>Frequently Asked Questions</h2>
+      <p>Find answers to common questions about ImpairmentAI</p>
+    </div>
+
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>How accurate is ImpairmentAI's detection system?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>ImpairmentAI achieves 99.9% accuracy in detecting impairment through our advanced AI algorithms. Our system has been tested across diverse populations and conditions, ensuring reliable results in real-world scenarios.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>How long does it take to integrate ImpairmentAI?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Integration typically takes 1-3 days with our SDK, and can be completed in hours with our REST API. Our team provides comprehensive documentation and support throughout the integration process.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>What data privacy measures are in place?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>We prioritize data privacy with end-to-end encryption, local processing, and anonymous data collection. Our system is fully compliant with GDPR, HIPAA, and other relevant privacy regulations.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Can ImpairmentAI work offline?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes, ImpairmentAI can function offline. The core detection system works locally on the device, with optional cloud synchronization when connectivity is available.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>What types of impairment can be detected?</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Our system can detect various types of impairment including fatigue, intoxication, cognitive distraction, and physical impairment through analysis of multiple behavioral and physiological indicators.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="contact-container">
+      <div class="contact-info">
+        <h2>Get in Touch</h2>
+        <p>Ready to make your operations safer? Contact us today to learn how ImpairmentAI can help your organization.</p>
+        
+        <div class="contact-details">
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <a href="mailto:hello@idrv.ai" style="color: white; text-decoration: none;">hello@idrv.ai</a>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-phone"></i>
+            <a href="tel:7208438588" style="color: white; text-decoration: none;">+1 (720) 843-8588</a>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Denver, Colorado</span>
+          </div>
+        </div>
+
+        <div class="social-links">
+          <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company">
+          </div>
+          
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+          
+          <button type="submit" class="button button-primary">Send Message</button>
+      </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h3>ImpairmentAI</h3>
+        <p>Making roads safer with intelligent technology.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>Email: info@impairmentai.com</p>
+        <p>Phone: (555) 123-4567</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Add JavaScript for navigation functionality -->
+  <script>
+    // Sticky Navigation
+    window.addEventListener('scroll', function() {
+      const nav = document.querySelector('.main-nav');
+      if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
+      mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
+    });
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+
+        const target = document.querySelector(targetId);
+        const navHeight = document.querySelector('.main-nav').offsetHeight;
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+
+        window.scrollTo({
+          top: targetPosition - navHeight,
+          behavior: 'smooth'
+        });
+
+        // Close mobile menu if open
+        if (navLinks.classList.contains('active')) {
+          navLinks.classList.remove('active');
+          mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
+          mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
+        }
+      });
+    });
+
+    // Active Link Highlighting
+    window.addEventListener('scroll', () => {
+      let current = '';
+      const sections = document.querySelectorAll('section');
+      const navHeight = document.querySelector('.main-nav').offsetHeight;
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - navHeight - 100;
+        if (pageYOffset >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+  <!-- Add this JavaScript for animation -->
+  <script>
+    // Animate statistics on scroll
+    function animateStats() {
+      const stats = document.querySelectorAll('.stat-number');
+      stats.forEach(stat => {
+        const target = parseInt(stat.innerText);
+        let current = 0;
+        const increment = target / 30;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            clearInterval(timer);
+            current = target;
+          }
+          stat.innerText = current.toFixed(0) + (stat.innerText.includes('%') ? '%' : '');
+        }, 50);
+      });
+    }
+
+    // Trigger animation when section is in view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateStats();
+          observer.unobserve(entry.target);
+        }
+      });
+    });
+
+    observer.observe(document.querySelector('.industry-stats'));
+  </script>
+</body>
+
+</html>
